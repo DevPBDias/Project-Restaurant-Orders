@@ -1,7 +1,4 @@
 class TrackOrders:
-    # Prato favorito por cliente;
-    # Pratos nunca pedidos por cada cliente;
-    # Dias nunca visitados por cada cliente;
     # Dia mais movimentado;
     # Dia menos movimentado.
     def __init__(self):
@@ -61,7 +58,21 @@ class TrackOrders:
         return customer_missed_days
 
     def get_busiest_day(self):
-        pass
+        attendace_days = {}
+
+        for order in self.orders_meals:
+            if order["day"] in attendace_days:
+                attendace_days[order["day"]] += 1
+            else:
+                attendace_days[order["day"]] = 1
+        return max(attendace_days, key=attendace_days.get)
 
     def get_least_busy_day(self):
-        pass
+        attendace_days = {}
+
+        for order in self.orders_meals:
+            if order["day"] in attendace_days:
+                attendace_days[order["day"]] += 1
+            else:
+                attendace_days[order["day"]] = 1
+        return min(attendace_days, key=attendace_days.get)

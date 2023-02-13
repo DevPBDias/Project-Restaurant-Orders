@@ -15,70 +15,71 @@ def reader_csv(file):  # [{customers: maria, meals: hamburguer, days: domingo}]
             raise FileNotFoundError(f"Arquivo inexistente: '{file}'")
 
 
-def max_meal(data):
-    maria_meals = {}  # {hamburguer: 10}
+def max_meal_ordered_by_customer(data, customer):
+    customer_meals = {}  # {hamburguer: 10}
 
     for order in data:
-        if order["customers"] == "maria":
-            if order["meals"] in maria_meals:
-                maria_meals[order["meals"]] += 1
+        if order["customers"] == customer:
+            if order["meals"] in customer_meals:
+                customer_meals[order["meals"]] += 1
             else:
-                maria_meals[order["meals"]] = 1
+                customer_meals[order["meals"]] = 1
     # https://datagy.io/python-get-dictionary-key-with-max-value/
-    return max(maria_meals, key=maria_meals.get)
+    return max(customer_meals, key=customer_meals.get)
 
 
-def times_hamburger(data):  # 1
-    arnaldo_hamburguer = 0
+def most_meal_ordered(data, customer, meal):  # 1
+    customer_meal = 0
 
     for order in data:
-        if order["customers"] == "arnaldo":
-            if order["meals"] == "hamburguer":
-                arnaldo_hamburguer += 1
-    return arnaldo_hamburguer
+        if order["customers"] == customer:
+            if order["meals"] == meal:
+                customer_meal += 1
+    return customer_meal
 
 
-def no_meals_asked(data):
+def no_meals_ordered_by_customer(data, customer):
     all_meals = set()
-    meals_asked_by_joao = set()
-    not_asked_by_joao = set()
+    meals_asked_by_customer = set()
+    not_asked_by_customer = set()
 
     for order in data:
         all_meals.add(order["meals"])
-        if order["customers"] == "joao":
-            meals_asked_by_joao.add(order["meals"])
+        if order["customers"] == customer:
+            meals_asked_by_customer.add(order["meals"])
 
     for meal in all_meals:
-        if meal not in meals_asked_by_joao:
-            not_asked_by_joao.add(meal)
+        if meal not in meals_asked_by_customer:
+            not_asked_by_customer.add(meal)
 
-    return not_asked_by_joao
+    return not_asked_by_customer
 
 
-def no_attendance_days(data):
+def no_attendance_days_by_customer(data, customer):
     all_days = set()
-    joao_attendance = set()
-    joao_missed_days = set()
+    customer_attendance = set()
+    customer_missed_days = set()
 
     for order in data:
         all_days.add(order["days"])
-        if order["customers"] == "joao":
-            joao_attendance.add(order["days"])
+        if order["customers"] == customer:
+            customer_attendance.add(order["days"])
 
     for day in all_days:
-        if day not in joao_attendance:
-            joao_missed_days.add(day)
+        if day not in customer_attendance:
+            customer_missed_days.add(day)
 
-    return joao_missed_days
+    return customer_missed_days
 
 
 def writing_txt(path_to_file):
     data_csv = reader_csv(path_to_file)
     with open('data/mkt_campaign.txt', 'w') as file:
-        file.write(str(max_meal(data_csv)) + '\n')
-        file.write(str(times_hamburger(data_csv)) + '\n')
-        file.write(str(no_meals_asked(data_csv)) + '\n')
-        file.write(str(no_attendance_days(data_csv)) + '\n')
+        file.write(str(max_meal_ordered_by_customer(data_csv, "maria")) + '\n')
+        file.write(
+            str(most_meal_ordered(data_csv, "arnaldo", "hamburguer")) + '\n')
+        file.write(str(no_meals_ordered_by_customer(data_csv, "joao")) + '\n')
+        file.write(str(no_attendance_days_by_customer(data_csv, "joao")))
 
 
 def analyze_log(path_to_file):
